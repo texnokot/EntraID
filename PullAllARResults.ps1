@@ -1,4 +1,3 @@
-
 # Install the Microsoft.Graph module if not already installed
 # Install-Module Microsoft.Graph 
 # Import the Microsoft.Graph module
@@ -6,7 +5,6 @@
 # Install the MS Identity Governance module
 # Install-Module -Name Microsoft.Graph.Identity.Governance
 # Import both if needed
-
 
 # Function to place results from Get requests to Microsoft Graph
 function Get-GraphData {
@@ -75,7 +73,7 @@ function Get-GraphData {
 # Define the values applicable for the application used to connect to the Graph (change these details for your tenant and registered app)
 $AppId = "AppID"
 $TenantId = "TenantID"
-$AppSecret = 'Secret'
+$AppSecret = 'AppSecret'
 
 $OutputCSV = "AllAzureADAccessReviewResults.csv"
 
@@ -115,7 +113,7 @@ if ($accessReviewDefinitions.Count -eq 0) {
     exit
 }
 
-# Get authenticated to the Graph for using powershell commands from IdentityGovernance
+# Get authenticated to the Graph for using PowerShell commands from IdentityGovernance
 $tokens = $token | ConvertTo-SecureString -AsPlainText -Force
 Connect-MgGraph -AccessToken $tokens -NoWelcome
 
@@ -136,21 +134,38 @@ foreach ($definition in $accessReviewDefinitions) {
     # Loop through each instance
     foreach ($instance in $instances) {
         $instanceId = $instance.Id
+        $starttime = $instance.startDateTime
+        $endtime = $instance.endDateTime
+        $statusinstance = $instance.status
 
         # Get decisions for the specific access review instance
         $decisions = Get-MgIdentityGovernanceAccessReviewDefinitionInstanceDecision -AccessReviewScheduleDefinitionId $definitionId -AccessReviewInstanceId $instanceId -All
 
         # Loop through each decision and store the result
         foreach ($decision in $decisions) {
+
             $result = [PSCustomObject]@{
                 AccessReviewDefinitionId = $definitionId
                 AccessReviewDefinitionName = $definitionName
                 AccessReviewInstanceId = $instanceId
-                PrincipalName = $decision.PrincipalDisplayName
+                StartTime = $starttime
+                EndTime = $endtime
+                Status = $statusinstance
+                AppliedByID = $decision.appliedBy.Id
+                AppliedByDisplayName = $decision.appliedBy.DisplayName
+                AppliedByUserPrincipalName = $decision.appliedBy.UserPrincipalName
+                ApliedDateTime = $decision.appliedDateTime
+                ApplyResult = $decision.applyResult
+                Jusatification = $decision.justification
                 Decision = $decision.Decision
-                ReviewedDate = $decision.ReviewedDateTime
-                ReviewResult = $decision.Result
-                ReviewResultDetails = $decision.Details
+                DecisionID = $decision.id
+                Principal = $decision.principal.Id
+                Recommendation = $decision.recommendation
+                Resource = $decision.resource.Id
+                ReviewedByID = $decision.reviewedBy.Id
+                ReviewedByDisplayName = $decision.reviewedBy.DisplayName
+                ReviewedByUserPrincipalName = $decision.reviewedBy.UserPrincipalName
+                ReviewedDateTime = $decision.reviewedDateTime
             }
 
             # Add the result to the accumulated array
