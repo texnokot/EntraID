@@ -1,5 +1,6 @@
+
 # Install the Microsoft.Graph module if not already installed
-# Install-Module Microsoft.Graph -Scope CurrentUser
+# Install-Module Microsoft.Graph 
 # Import the Microsoft.Graph module
 # Import-Module Microsoft.Graph
 # Install the MS Identity Governance module
@@ -74,7 +75,7 @@ function Get-GraphData {
 # Define the values applicable for the application used to connect to the Graph (change these details for your tenant and registered app)
 $AppId = "AppID"
 $TenantId = "TenantID"
-$AppSecret = 'AppSecret'
+$AppSecret = 'Secret'
 
 $OutputCSV = "AllAzureADAccessReviewResults.csv"
 
@@ -149,6 +150,7 @@ foreach ($definition in $accessReviewDefinitions) {
                 Decision = $decision.Decision
                 ReviewedDate = $decision.ReviewedDateTime
                 ReviewResult = $decision.Result
+                ReviewResultDetails = $decision.Details
             }
 
             # Add the result to the accumulated array
