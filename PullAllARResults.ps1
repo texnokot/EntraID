@@ -93,7 +93,7 @@ $tokenRequest = Invoke-WebRequest -Method Post -Uri $uri -ContentType "applicati
 $token = ($tokenRequest.Content | ConvertFrom-Json).access_token
 $Headers = @{
             'Content-Type'  = "application/json"
-            'Authorization' = "Bearer $Token" 
+            'Authorization' = "Bearer $token" 
             'ConsistencyLevel' = "eventual" 
 }
 
