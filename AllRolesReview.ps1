@@ -42,17 +42,27 @@ foreach ($role in $roles) {
             justificationRequiredOnApproval = $true
             defaultDecisionEnabled = $true
             defaultDecision = "Deny"
-            # instanceDurationInDays = 14
             autoApplyDecisionsEnabled = $true
             recommendationsEnabled = $false
             recurrence = @{
                 range = @{
                     type = "endDate"
-                    startDate = "2025-02-08"
-                    endDate = "2025-02-28"
+                    startDate = "2025-04-08"
+                    endDate = "2025-04-28"
                 }
             }
         }
+        AdditionalNotificationRecipients = @(
+            @{
+                "@odata.type" = "#microsoft.graph.accessReviewNotificationRecipientItem"
+                notificationRecipientScope = @{
+                    "@odata.type" = "#microsoft.graph.accessReviewNotificationRecipientQueryScope"
+                    queryType = "MicrosoftGraph"
+                    query = "/users/b3765cf2-f9ea-43bc-a295-6be1f443fdec" # Adjust query as needed for specific recipients, Currently it is user ID here
+                }
+                notificationTemplateType = "CompletedAdditionalRecipients"
+            }
+        )
     }
 
     # Set the scope based on the assignment type
@@ -86,7 +96,6 @@ foreach ($role in $roles) {
             )
         }
     }
-
 
     # Create the access review using the defined parameters
     try {
