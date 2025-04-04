@@ -1,3 +1,4 @@
+# Script to collect all role assignments across subscriptions where you have permissions
 # Connect to Azure and Microsoft Graph
 $startTime = Get-Date
 Connect-MgGraph -Scopes "User.Read.All","Group.Read.All"
